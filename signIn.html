@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Sign In</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../Images/Favicon.png" type="image/x-icon">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- External css -->
+    <link rel="stylesheet" href="CSS/loder.css">
+    <!-- Minimal custom CSS -->
+    <style>
+        .form-container {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .terms-check {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="custom-loader">
+        <div class="spinner"></div>
+    </div>
+
+
+    <div class="container-fluid min-vh-100 d-flex align-items-center">
+        <div class="container">
+            <div class="row g-0 form-container overflow-hidden">
+
+                <!-- Image Column - Hidden on mobile -->
+                <div class="col-lg-6 d-none d-lg-flex text-white p-0 align-items-stretch">
+                    <img src="../Images/SignInImage.gif" alt="Sign In Image"
+                        class="img-fluid w-100 h-100 object-fit-cover">
+                </div>
+
+
+                <!-- Form Column -->
+                <div class="col-lg-6 p-5">
+                    <div class="text-center mb-4 d-lg-none">
+                        <img src="../Images/Favicon.png" alt="image icon" style="height: 70px;">
+                        <h3 class="fw-bold text-primary">Student Portal</h3>
+                    </div>
+                    <h1 class="h1 mb-4 fw-bolder">Sign In</h1>
+
+                
+
+                        <!-- Enter your Email -->
+                        <div class="mb-3">
+                            <label for="signinEmail" class="form-label">Your Email</label>
+                            <input type="email" class="form-control" id="signinEmail" placeholder="name@gmail.com">
+                        </div>
+
+                        <!-- Enter your Password -->
+                        <div class="mb-3 position-relative">
+                            <label for="signinPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signinPassword"
+                                placeholder="Create a password">
+
+                            <!-- Lock Icon -->
+                            <span class="passwordShow position-absolute" id="changeIcon"
+                                style="top: 50%; right: 10px; transform: translateY(25%); cursor: pointer;">
+                                <ion-icon name="lock-closed-outline"></ion-icon>
+                            </span>
+                        </div>
+
+                        <button style="background-color: white; border: none; color: blue;"
+                         id="forgotPassword">Forgot Password</button>
+
+                        <!-- agree Statement -->
+                        <div class="mb-4 mt-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="termsCheck">
+                            <label class="form-check-label terms-check" for="termsCheck">I agree all statements in <a
+                                    href="#" class="text-decoration-none">Terms of service</a></label>
+                        </div>
+
+                        <!-- Sign In Buton -->
+                        <button type="submit" class="btn btn-primary w-50 py-2 mb-3 fw-bold" id="login">Sign
+                            In</button>
+
+                        <div class="text-center">
+                            <p class="mb-0">Don't have an account?<a href="/singUp.html" class="text-decoration-none fw-bold">Sign Up</a></p>
+                        </div>
+                    
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- External CSS -->
+    <script src="/JavaScript/signIn.js" type="module"></script>
+    <script src="/JavaScript/forgotPassword.js" type="module"></script>
+    <!-- Sweet Aleart -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>
