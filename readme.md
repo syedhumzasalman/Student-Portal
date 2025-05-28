@@ -58,5 +58,5 @@ If you have suggestions, want to collaborate, or just want to say hi:
 
 **Created by:** Syed Hamza Salman  
 **Email:** syedhamzasalman00@gmail.com  
-**GitHub:** [@hamzasyeddev](https://github.com/syedhumzasalman)
-**Portfolio:** [@hamzasyeddev](https://www.syedhumzasalman.com/)
+**GitHub:** [@syedhumzasalman](https://github.com/syedhumzasalman)
+**Portfolio:** [@syedhumzasalman](https://www.syedhumzasalman.com/)
