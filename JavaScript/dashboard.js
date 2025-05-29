@@ -1,8 +1,10 @@
-import { auth, onAuthStateChanged } from "../fireBase.js"
+import { auth, onAuthStateChanged, doc, getDoc, db } from "../fireBase.js"
 import { sendVerification } from "/JavaScript/emilVerification.js"
 import { dontChangeCurrentPage2 } from "/JavaScript/onAuthStateChangedListener.js"
 import { passwordReset } from "/JavaScript/updatePassword.js"
 import { ProfileUpdate } from "/JavaScript/updateProfile.js"
+import { getUserData } from "/JavaScript/addUserInfo.js"
+
 
 //  Only run this once to check if user is already logged in
 dontChangeCurrentPage2()
@@ -29,27 +31,40 @@ overlay.addEventListener("click", () => {
   overlay.style.display = "none";
 });
 
+
+
 // *************************************************************
 
-//  Only run this once to check if user is already logged in
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    // If user is logged in, go to dashboard
-    window.location.replace("/index.html");
-  } else {
-    document.getElementById("custom-loader").style.display = "none";
-    document.body.style.display = "block";
+let getUserDataInfo = async (userId) => {
+
+  try {
+    const docRef = doc(db, "usersInfo", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data;
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      return {};
+    }
+  } catch (err) {
+    console.error("Error getting document:", err);
   }
-});
+
+
+}
 
 
 // *************************************************************
 
-
+let profileBtn = document.querySelectorAll('.profileBtn');
 
 let currentUser = null;
+let currentFirestoreData = null;
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
     const userPic = document.getElementById("userPic");
@@ -61,22 +76,37 @@ onAuthStateChanged(auth, (user) => {
     const email = user.email || "No Email Available";
     // console.log(currentUser);
 
+    // Load Firestore userInfo data
+    const firestoreData = await getUserDataInfo(user.uid);
+    currentFirestoreData = firestoreData;
+
+
+
     if (userPic) userPic.src = photoURL;
     if (userName) userName.innerText = `Welcome!, ${displayName}`;
     if (userEmail) userEmail.innerText = email;
   } else {
     currentUser = null;
+    currentFirestoreData = null;
   }
 });
 
 
 // *************************************************************
 
-let profileBtn = document.querySelectorAll('.profileBtn');
 
-let profile = (user) => {
+
+let profile = (user, firestoreData = {}) => {
 
   let mainContent = document.getElementById("mainContent");
+
+  // Use firestore data if available, otherwise fallback to auth user data
+  const fullName = firestoreData.fullName || user.displayName || "No Name Available";
+  const dob = firestoreData.dateOfBirth || "Not Available";
+  const gender = firestoreData.gender || "Not Available";
+  const cnic = firestoreData.CNIC || "Not Available";
+  const phone = firestoreData.phone || user.phoneNumber || "No Number Available";
+  const address = firestoreData.address || "Not Available";
 
 
   mainContent.innerHTML = `
@@ -87,7 +117,7 @@ let profile = (user) => {
     <div class="row align-items-center">
       <div class="col-md-2 text-center mb-3 mb-md-0">
         <img src="${user.photoURL || 'https://www.w3schools.com/howto/img_avatar.png'}"
-             class="rounded-circle border border-white"
+             class="rounded-circle border border-3 border-primary"
              style="width: 120px; height: 120px; object-fit: cover;" alt="Profile Picture">
       </div>
       <div class="col-md-10">
@@ -105,53 +135,142 @@ let profile = (user) => {
   <div class="row g-4">
 
     <!-- Personal Information -->
-    <div class="col-lg-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-header bg-white fw-bold">
-          <i class="fas fa-id-card me-2"></i>Personal Information
+     <div class="col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white border-0 fw-bold fs-5 py-3">
+          <i class="fas fa-id-card me-2 text-primary"></i>Personal Information
         </div>
-        <div class="card-body">
-          <div class="mb-2"><strong>Full Name:</strong> ${user.displayName || 'No Name Available'}</div>
-          <div class="mb-2"><strong>Date of Birth:</strong> Not Available</div>
-          <div class="mb-2"><strong>Gender:</strong> Not Available </div>
-          <div class="mb-2"><strong>CNIC:</strong> Not Available </div>
-          <div><strong>Qualification:</strong> Not Available</div>
+        <div class="card-body pt-0">
+          <ul class="list-unstyled">
+            <li class="mb-3 d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">Full Name:</span>
+              <span>${fullName}</span>
+            </li>
+            <li class="mb-3 d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">Date of Birth:</span>
+              <span>${moment(dob).format('MMMM Do YYYY')}</span>
+            </li>
+            <li class="mb-3 d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">Gender:</span>
+              <span>${gender}</span>
+            </li>
+            <li class="d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">CNIC:</span>
+              <span>${cnic}</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
+
 
     <!-- Contact Information -->
     <div class="col-lg-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-header bg-white fw-bold">
-          <i class="fas fa-address-book me-2"></i>Contact Information
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white border-0 fw-bold fs-5 py-3">
+          <i class="fas fa-address-book me-2 text-primary"></i>Contact Information
         </div>
-        <div class="card-body">
-          <div class="mb-2"><strong>Email: </strong>${user.email || 'No Email Available'}</div>
-          <div class="mb-2"><strong>Phone:</strong>${user.phoneNumber || ' No Number Available'}</div>
-          <div><strong>Address:</strong> Not Available</div>
+        <div class="card-body pt-0">
+          <ul class="list-unstyled">
+            <li class="mb-3 d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">Email:</span>
+              <span>${user.email || 'No Email Available'}</span>
+            </li>
+            <li class="mb-3 d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">Phone:</span>
+              <span>+92 ${phone}</span>
+            </li>
+            <li class="mb-3 d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">Address:</span>
+              <span>${address}</span>
+            </li>
+            <li class="mb-3 d-flex">
+              <span class="me-2 fw-medium fw-bold" style="width: 120px;">ID:</span>
+              <span>${user.uid.substring(0, 8).toUpperCase()}</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-
   </div>
 
 
   <!-- Action Buttons -->
-  <div class="d-flex justify-content-end gap-3 mt-4">
+  <div class="d-flex justify-content-end flex-wrap gap-3 mt-4">
   <button class="btn btn-outline-primary" id="idUpdatePassword">
       <i class="fa-solid fa-unlock"></i> Update Password
     </button>
     <button class="btn btn-outline-primary" id="profileUpdated">
-      <i class="fas fa-edit me-2"></i>Edit Profile
+      <i class="fas fa-edit me-2"></i>Edit Picture
     </button>
-    <button class="btn btn-primary">
-      <i class="fas fa-download me-2"></i>Download ID Card
+    <button class="btn btn-outline-primary" id="EditProfile">
+      <i class="fas fa-edit me-2"></i>Edit Profile
     </button>
   </div>
 
 </div>
+
+<!-- ID Card Section -->
+  <div class="row full-download">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 fw-bold fs-5 py-3">
+          <i class="fas fa-id-badge me-2 text-primary"></i>Student ID Card
+        </div>
+        <div class="card-body">
+          <!-- Printable ID Card -->
+          <div id="printableIdCard" class="border border-2 rounded-3 p-4 bg-white" style="max-width: 400px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-cXFuavrc6SQ1s7DJvs55FQ-BF0bqYSM-iw&s" alt="University Logo" style="height: 40px;">
+              <div class="text-end">
+                <small class="text-muted d-block">Valid Until: 12/2025</small>
+                <small class="text-muted">ID: ${user.uid.substring(0, 8).toUpperCase()}</small>
+              </div>
+            </div>
+            
+            <div class="text-center mb-3">
+              <img src="${user.photoURL || 'https://www.w3schools.com/howto/img_avatar.png'}" 
+                   class="rounded-circle border border-2" 
+                   style="width: 100px; height: 100px; object-fit: cover;">
+            </div>
+            
+            <div class="text-center mb-3">
+              <h4 class="mb-1 fw-bold">${fullName}</h4>
+              <div class="text-muted mb-2">${user.email}</div>
+              <span class="badge bg-primary">Student</span>
+            </div>
+            
+            <hr>
+            
+            <div class="row small">
+              <div class="col-6">
+                <div class="mb-1"><strong>DOB:</strong> ${moment(dob).format('L')}</div>
+                <div><strong>CNIC:</strong> ${cnic}</div>
+              </div>
+              <div class="col-6 text-end">
+                <div class="mb-1"><strong>Phone:</strong> +92 ${phone}</div>
+                <div class="text-truncate"><strong>ID:</strong> ${user.uid.substring(0, 8).toUpperCase()}</div>
+              </div>
+            </div>
+            
+            <div class="mt-3 text-center">
+              <small class="text-muted">This card is property of University</small>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="mt-4 d-flex gap-3">
+            <button id="downloadIdCard" class="btn btn-outline-primary px-4">
+              <i class="fas fa-download me-2"></i>Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 `
+
+
   // ****************************************************************
   const emailVerifiedEl = document.querySelector(".emailVerified");
 
@@ -166,23 +285,41 @@ let profile = (user) => {
   emailVerifiedEl.addEventListener("click", sendVerification);
   // ****************************************************************
 
-  let myupdatePassword = document.getElementById("idUpdatePassword")
-  myupdatePassword.addEventListener("click", passwordReset);
+  document.getElementById("downloadIdCard").addEventListener("click", () => {
+    const profileElement = document.querySelector(".row.full-download");
 
-  // ****************************************************************
+    html2canvas(profileElement, {
+      scale: 3,
+      useCORS: true,
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = imgData;
+      link.download = "profile-id-card.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  });
 
 
-  let profileUpdated = document.getElementById("profileUpdated");
-  profileUpdated.addEventListener("click", ProfileUpdate);
 
+
+  // Attach event listeners for buttons
+  document.getElementById("idUpdatePassword").addEventListener("click", passwordReset);
+  document.getElementById("profileUpdated").addEventListener("click", ProfileUpdate);
+  document.getElementById("EditProfile").addEventListener("click", getUserData);
 
 }
+
+
+
 
 profileBtn.forEach((btn) => {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
     if (currentUser) {
-      profile(currentUser);
+      profile(currentUser, currentFirestoreData || {});
     }
   });
 })
