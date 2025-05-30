@@ -1,5 +1,6 @@
-import { auth, createUserWithEmailAndPassword, updateProfile } from "../fireBase.js"
-import {dontChangeCurrentPage} from "/JavaScript/onAuthStateChangedListener.js"
+import { auth, createUserWithEmailAndPassword, updateProfile, doc, setDoc, db } from "../fireBase.js"
+import { dontChangeCurrentPage } from "/JavaScript/onAuthStateChangedListener.js"
+
 
 
 
@@ -80,6 +81,7 @@ let signUp = async () => {
     // Create User
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     
+
     // Update Profile (Display Name)
     await updateProfile(auth.currentUser, { displayName: name });
 
@@ -98,7 +100,7 @@ let signUp = async () => {
     let errorMessage = "Something went wrong. Try again.";
 
     console.log(errorMessage);
-    
+
     // Firebase Error Handling
     switch (error.code) {
       case "auth/email-already-in-use":

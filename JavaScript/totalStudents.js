@@ -1,12 +1,14 @@
-import { auth, onAuthStateChanged, doc, getDocs, collection, db } from "../fireBase.js"
-import { getUserData } from "/JavaScript/addUserInfo.js"
+import { auth, onAuthStateChanged, doc, getDocs, collection, db, getDoc, setDoc } from "../fireBase.js"
+
 
 
 let totalStudents = document.getElementById("totalStudents");
 let mainContainer = document.getElementById("main-container");
 
 
+
 export const addStudents = async () => {
+
   try {
     const querySnapshot = await getDocs(collection(db, "usersInfo"));
     const users = [];
@@ -19,13 +21,16 @@ export const addStudents = async () => {
     mainContainer.innerHTML = `
       <div class="container my-4">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 p-3 bg-light rounded-3">
-          <div>
+          <div class="">
             <h3 class="fw-bold">Student Records</h3>
             <div class="d-flex align-items-center">
               <span class="badge bg-primary rounded-pill me-2">
                 <i class="fas fa-users me-1"></i> 
                 <span id="totalStudents">${users.length}</span> Total
               </span>
+              <button id="addStudent" class="btn btn-primary px-4">
+               <i class="fas fa-user-plus me-2"></i>Add Student
+             </button>
             </div>
           </div>
           
@@ -100,6 +105,18 @@ export const addStudents = async () => {
       </div>
     `;
 
+    
+    const addBtn = document.getElementById("addStudent");
+    if (addBtn) {
+      addBtn.addEventListener("click", getUserData);
+    }
+
+   
+    const addFirstBtn = document.getElementById("addFirstBtn");
+    if (addFirstBtn) {
+      addFirstBtn.addEventListener("click", getUserData);
+    }
+
   } catch (err) {
     console.error("Error loading students:", err);
     mainContainer.innerHTML = `<div class="alert alert-danger">Failed to load students.</div>`;
@@ -107,3 +124,125 @@ export const addStudents = async () => {
 };
 
 totalStudents.addEventListener('click', addStudents)
+
+
+
+
+
+
+const getUserData = () => {
+  mainContainer.innerHTML = `
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+          <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Add New User</h4>
+          </div>
+          <div class="card-body" id="userFormDiv">
+            <div class="mb-3">
+              <label for="emailInput" class="form-label">User Email (Required)</label>
+              <input type="text" class="form-control" id="emailInput" placeholder="Enter Email" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="fullName" placeholder="Enter full name" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="dob" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Gender</label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gender" id="male" value="male">
+                  <label class="form-check-label" for="male">Male</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                  <label class="form-check-label" for="female">Female</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="cnic" class="form-label">CNIC</label>
+                <input type="text" class="form-control" id="cnic" placeholder="XXXXX-XXXXXXX-X" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <div class="input-group">
+                  <span class="input-group-text">+92</span>
+                  <input type="tel" class="form-control" id="phone" placeholder="3001234567" required>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Address</label>
+              <textarea class="form-control" id="address" rows="3"></textarea>
+            </div>
+            <div class="d-grid gap-2">
+              <button id="saveUserBtn" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>Save User
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById("saveUserBtn").addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const emailInput = document.getElementById("emailInput").value.trim();
+    const fullName = document.getElementById("fullName").value.trim();
+    const dateOfBirth = document.getElementById("dob").value.trim();
+    const genderRadio = document.querySelector('input[name="gender"]:checked');
+    const gender = genderRadio ? genderRadio.value : "";
+    const CNIC = document.getElementById("cnic").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const address = document.getElementById("address").value.trim();
+
+    if (!emailInput || !fullName || !dateOfBirth || !gender || !CNIC || !phone) {
+      swal("Validation Error", "Please fill in all required fields.", "warning");
+      return;
+    }
+
+    try {
+      const userRef = doc(db, "usersInfo", "user_1");
+      await setDoc(userRef, {
+        fullName,
+        dateOfBirth,
+        gender,
+        CNIC,
+        phone,
+        address,
+        email: emailInput,
+        verify: currentUser.emailVerified,
+      });
+
+      Swal.fire("Success!", "User data saved successfully.", "success").then(() => {
+        clearForm();
+        window.location.replace("/admin.html");
+      });
+    } catch (error) {
+      console.error("Error saving user:", error);
+      Swal.fire("Error", "Failed to save user data.", "error");
+    }
+  });
+};
+
+function clearForm() {
+  document.getElementById("emailInput").value = "";
+  document.getElementById("fullName").value = "";
+  document.getElementById("dob").value = "";
+  document.getElementById("cnic").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("address").value = "";
+  const checkedGender = document.querySelector('input[name="gender"]:checked');
+  if (checkedGender) checkedGender.checked = false;
+}

@@ -132,7 +132,7 @@ export let getUserData = () => {
     saveBtn.addEventListener("click", async (e) => {
         e.preventDefault();
 
-        // Manual validation since no <form>
+        
          fullName = document.getElementById("fullName").value.trim();
          dateOfBirth = document.getElementById("dob").value.trim();
          genderRadio = document.querySelector('input[name="gender"]:checked');
@@ -141,7 +141,7 @@ export let getUserData = () => {
          phone = document.getElementById("phone").value.trim();
          address = document.getElementById("address").value.trim();
 
-        // Basic validation, you can add more if you want
+        
         if (!fullName || !dateOfBirth || !gender || !CNIC || !phone) {
             swal("Validation Error", "Please fill in all required fields correctly.", "warning");
             return;
