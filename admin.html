@@ -24,13 +24,15 @@
     </button>
     <div class="sidebar-brand">
       <i class="fas fa-graduation-cap"></i>
-      <span>Student Portal</span>
+      <span>Admin Panel</span>
     </div>
     <ul class="sidebar-nav">
       <li><a href="admin.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
       <li><a href="#" id="totalStudents"><i class="fas fa-users"></i>Total Students</a></li>
       <li><a href="#" id="showAssignment"><i class="fas fa-file-alt"></i> Assignments</a></li>
-      <li><a href="#"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+      <li><a href="#" id="enterCourses"><i class="fas fa-calendar-check"></i>Enter Courses</a></li>
+      <li><a href="#" id="courses"><i class="fas fa-calendar-check"></i>Enroll Courses</a></li>
+      <li><a href="#" id="attendance"><i class="fas fa-user-check"></i>Attendance</a></li>
     </ul>
   </div>
 
@@ -51,7 +53,7 @@
           <i class="fas fa-bell text-muted fs-5"></i>
           <span class="notification-badge">3</span>
         </div>
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+        <img src="https://media.licdn.com/dms/image/v2/D4D03AQGeg8Na_UcHJw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1727801540957?e=1754524800&v=beta&t=3WUcTLjb32ew6nLIUMl3cfqOjtRJYZthgkpl5Z7Rfv8" alt="User">
         <div>
           <div class="fw-bold">Admin User</div>
           <small class="text-muted">Administrator</small>
@@ -69,7 +71,7 @@
             <div class="d-flex justify-content-between">
               <div>
                 <h6 class="stat-title">Total Students</h6>
-                <h3 class="stat-value" id="totalStudent">L...</h3>
+                <h3 class="stat-value" id="totalStudent">0</h3>
               </div>
               <div class="stat-icon" style="background-color: var(--primary);">
                 <i class="fas fa-user-graduate"></i>
@@ -85,7 +87,7 @@
             <div class="d-flex justify-content-between">
               <div>
                 <h6 class="stat-title">Active Courses</h6>
-                <h3 class="stat-value">0</h3>
+                <h3 class="stat-value" id="activeCourses">0</h3>
               </div>
               <div class="stat-icon" style="background-color: var(--success);">
                 <i class="fas fa-book-open"></i>
@@ -101,7 +103,7 @@
             <div class="d-flex justify-content-between">
               <div>
                 <h6 class="stat-title">Total Assignments</h6>
-                <h3 class="stat-value">48</h3>
+                <h3 class="stat-value" id="totalAssignment">0</h3>
               </div>
               <div class="stat-icon" style="background-color: var(--warning);">
                 <i class="fas fa-tasks"></i>
@@ -116,7 +118,7 @@
             <div class="d-flex justify-content-between">
               <div>
                 <h6 class="stat-title">Attendance Rate</h6>
-                <h3 class="stat-value">89%</h3>
+                <h3 class="stat-value">0%</h3>
               </div>
               <div class="stat-icon" style="background-color: var(--info);">
                 <i class="fas fa-calendar-check"></i>
@@ -150,9 +152,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
-          <div class="card-footer bg-white border-0">
-            <a href="#" class="btn btn-sm btn-outline-primary">View All Submissions</a>
           </div>
         </div>
       </div>
@@ -205,6 +204,9 @@
   <script src="JavaScript/admin.js" type="module"></script>
   <script src="JavaScript/adminAssignment.js" type="module"></script>
   <script src="JavaScript/totalStudents.js" type="module"></script>
+  <script src="/JavaScript/studentCourses.js" type="module"></script>
+  <script src="/JavaScript/enterCourses.js" type="module"></script>
+  <script src="/JavaScript/attendance.js" type="module"></script>
 </body>
 
 </html>

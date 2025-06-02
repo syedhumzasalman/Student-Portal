@@ -1,4 +1,4 @@
-import { auth, onAuthStateChanged, doc, getDocs, collection, db, getDoc, setDoc } from "../fireBase.js"
+import { doc, getDocs, collection, db, getDoc, setDoc,query, where, deleteDoc  } from "../fireBase.js"
 
 
 
@@ -28,9 +28,6 @@ export const addStudents = async () => {
                 <i class="fas fa-users me-1"></i> 
                 <span id="totalStudents">${users.length}</span> Total
               </span>
-              <button id="addStudent" class="btn btn-primary px-4">
-               <i class="fas fa-user-plus me-2"></i>Add Student
-             </button>
             </div>
           </div>
           
@@ -53,9 +50,6 @@ export const addStudents = async () => {
                   <span class="text-truncate">${user.email || 'N/A'}</span>
                 </li>
                 <li class="mb-2 d-flex">
-                  <span class="text-truncate">${user.verify == true ? "✅ Email Verified" : "❌ Email Not-Verified"}</span>
-                </li>
-                <li class="mb-2 d-flex">
                   <span class="me-2 text-muted"><i class="fas fa-phone"></i></span>
                   <span>${user.phone || 'N/A'}</span>
                 </li>
@@ -71,9 +65,7 @@ export const addStudents = async () => {
             </div>
             <div class="card-footer bg-white border-0 pt-0">
               <div class="d-flex justify-content-between">
-                <button class="btn btn-sm btn-outline-primary view-btn" data-id="${user.id}">
-                  <i class="fas fa-eye me-1"></i> View
-                </button>
+                
                 <div class="dropdown">
                   <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
                           type="button" 
@@ -81,9 +73,9 @@ export const addStudents = async () => {
                     Actions
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item edit-btn" href="#" data-id="${user.id}"><i class="fas fa-edit me-2"></i>Edit</a></li>
+                    <li><a class="dropdown-item edit-btn" href="#" data-id="${user.id}" id="uEdit"><i class="fas fa-edit me-2"></i>Edit</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger delete-btn" href="#" data-id="${user.id}"><i class="fas fa-trash-alt me-2"></i>Delete</a></li>
+                    <li><a class="dropdown-item text-danger delete-btn" href="#" data-id="${user.id}" id="uDelete"><i class="fas fa-trash-alt me-2"></i>Delete</a></li>
                   </ul>
                 </div>
               </div>
@@ -97,24 +89,21 @@ export const addStudents = async () => {
             <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
             <h4 class="text-muted">No Students Found</h4>
             <p class="text-muted">Add new students to get started</p>
-            <button id="addFirstBtn" class="btn btn-primary px-4">
-              <i class="fas fa-user-plus me-2"></i>Add First Student
-            </button>
           </div>
         ` : ''}
       </div>
     `;
 
-    
-    const addBtn = document.getElementById("addStudent");
-    if (addBtn) {
-      addBtn.addEventListener("click", getUserData);
+
+    const editButton = document.getElementById("uEdit");
+    if (editButton) {
+      editButton.addEventListener("click", editUser);
     }
 
-   
-    const addFirstBtn = document.getElementById("addFirstBtn");
-    if (addFirstBtn) {
-      addFirstBtn.addEventListener("click", getUserData);
+
+    const uDelete = document.getElementById("uDelete");
+    if (uDelete) {
+      uDelete.addEventListener("click", deleteUser);
     }
 
   } catch (err) {
@@ -130,20 +119,16 @@ totalStudents.addEventListener('click', addStudents)
 
 
 
-const getUserData = () => {
+const editUser = () => {
   mainContainer.innerHTML = `
   <div class="container py-5">
     <div class="row justify-content-center">
       <div class="col-md-8 col-lg-6">
         <div class="card shadow">
           <div class="card-header bg-primary text-white">
-            <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Add New User</h4>
+            <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Edit User</h4>
           </div>
           <div class="card-body" id="userFormDiv">
-            <div class="mb-3">
-              <label for="emailInput" class="form-label">User Email (Required)</label>
-              <input type="text" class="form-control" id="emailInput" placeholder="Enter Email" required>
-            </div>
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="fullName" class="form-label">Full Name</label>
@@ -222,7 +207,7 @@ const getUserData = () => {
         phone,
         address,
         email: emailInput,
-        verify: currentUser.emailVerified,
+        verify: user.emailVerified,
       });
 
       Swal.fire("Success!", "User data saved successfully.", "success").then(() => {
@@ -246,3 +231,20 @@ function clearForm() {
   const checkedGender = document.querySelector('input[name="gender"]:checked');
   if (checkedGender) checkedGender.checked = false;
 }
+
+
+let deleteUser = async () => {
+
+  const q = query(collection(db, "usersInfo"));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach(async (document) => {
+    // console.log(doc.data());
+    // console.log(doc.id);
+    
+    await deleteDoc(doc(db, "usersInfo", document.id));
+  });
+
+  window.location.replace("/admin.html")
+ 
+} 

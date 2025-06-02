@@ -65,9 +65,6 @@ let clickAssignment = async () => {
               </table>
             </div>
           </div>
-          <div class="card-footer bg-transparent py-2">
-            <small class="text-muted"><i class="fas fa-sync-alt me-1"></i>Last updated: ${new Date().toLocaleDateString()}</small>
-          </div>
         </div>`;
         });
 

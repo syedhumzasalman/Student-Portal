@@ -7,6 +7,7 @@ import { getUserData } from "/JavaScript/addUserInfo.js"
 
 
 
+
 //  Only run this once to check if user is already logged in
 dontChangeCurrentPage2()
 
@@ -57,7 +58,7 @@ onAuthStateChanged(auth, async (user) => {
     const photoURL = user.photoURL || 'https://www.w3schools.com/howto/img_avatar.png';
     const displayName = user.displayName || "No Name Available";
     const email = user.email || "No Email Available";
-    // console.log(currentUser);
+    // console.log(photoURL);
 
 
     const existsEmail = user.email;
@@ -100,7 +101,7 @@ onAuthStateChanged(auth, async (user) => {
 
 
 
-let profile = (user, firestoreData = {}) => {
+export let profile = (user, firestoreData = {}, enrolledCourses = []) => {
 
   let mainContent = document.getElementById("mainContent");
 
@@ -198,10 +199,46 @@ let profile = (user, firestoreData = {}) => {
       </div>
     </div>
 
+    <!-- Enrolled Courses Section -->
+    <div class="card border-0 shadow-sm mt-4">
+      <div class="card-header bg-white border-0 fw-bold fs-5 py-3">
+        <i class="fas fa-book me-2 text-primary"></i>Enrolled Courses
+      </div>
+      <div class="card-body">
+        ${enrolledCourses && enrolledCourses.length > 0 ? `
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Course Name</th>
+                  <th>Instructor</th>
+                  <th>Enrollment Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${enrolledCourses.map(course => `
+                  <tr>
+                    <td>${course.name || 'N/A'}</td>
+                    <td>${course.trainer || 'N/A'}</td>
+                    <td>${moment(course.enrollmentDate).format('MMM D, YYYY')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : `
+          <div class="text-center py-4">
+            <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No Courses Enrolled Yet</h5>
+            <p class="text-muted">You haven't enrolled in any courses yet.</p>
+          </div>
+        `}
+      </div>
+    </div>
 
     <!-- Action Buttons -->
     <div class="d-flex justify-content-end flex-wrap gap-3 mt-4">
-    <button class="btn btn-outline-primary" id="idUpdatePassword">
+      <button class="btn btn-outline-primary" id="idUpdatePassword">
         <i class="fa-solid fa-unlock"></i> Update Password
       </button>
       <button class="btn btn-outline-primary" id="profileUpdated">

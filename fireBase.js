@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, deleteUser, verifyBeforeUpdateEmail, updateEmail, updateProfile, updatePassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider, getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import {serverTimestamp, arrayUnion, doc,updateDoc,  getDoc, setDoc, getFirestore, collection, addDoc, getDocs , query, where,} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import {deleteDoc, serverTimestamp, arrayUnion, doc,updateDoc,  getDoc, setDoc, getFirestore, collection, addDoc, getDocs , query, where,} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 
 const firebaseConfig = {
@@ -51,7 +51,9 @@ export {
   getDocs,
   updateDoc,
  arrayUnion,
- serverTimestamp
+ serverTimestamp,
+ deleteDoc,
+
 }
 
 

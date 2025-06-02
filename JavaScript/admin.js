@@ -1,23 +1,48 @@
 import { auth, onAuthStateChanged, doc, getDocs, collection, db } from "../fireBase.js"
-import { addStudents } from "./totalStudents.js"
 
 
+
+let activeCourses = document.getElementById("activeCourses");
 let totalStudent = document.getElementById("totalStudent");
-
+let totalAssignment = document.getElementById("totalAssignment");
+let countAssignment = null
 
 
 // Total students count function
 let countTotalStudents = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "usersInfo"));
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      countAssignment = data.enrolledCourses.length
+      
+    });
+    
     const total = querySnapshot.size;
     totalStudent.textContent = `${total}`;
+    totalAssignment.textContent = `${countAssignment}`;
   } catch (err) {
     console.error("Error getting students count:", err);
     totalStudent.textContent = "Err";
   }
 };
 
+
+// Total courses count function
+let getCoursesCount = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "courses"));
+    const total = querySnapshot.size;
+    activeCourses.textContent = `${total}`;
+  } catch (err) {
+    console.error("Error getting students count:", err);
+    activeCourses.textContent = "Err";
+  }
+};
+
+
+
+getCoursesCount()
 countTotalStudents()
 
 
