@@ -1,4 +1,4 @@
-import { doc, getDocs, collection, db, getDoc, setDoc,query, where, deleteDoc  } from "../fireBase.js"
+import { doc, getDocs, collection, db, getDoc, setDoc, query, where, deleteDoc } from "../fireBase.js"
 
 
 
@@ -50,6 +50,9 @@ export const addStudents = async () => {
                   <span class="text-truncate">${user.email || 'N/A'}</span>
                 </li>
                 <li class="mb-2 d-flex">
+                  <span class="text-truncate">${moment(user.dateOfBirth).format('[🗓️] dddd - MMM Do, YYYY') || 'N/A'}</span>
+                </li>
+                <li class="mb-2 d-flex">
                   <span class="me-2 text-muted"><i class="fas fa-phone"></i></span>
                   <span>${user.phone || 'N/A'}</span>
                 </li>
@@ -95,16 +98,19 @@ export const addStudents = async () => {
     `;
 
 
-    const editButton = document.getElementById("uEdit");
-    if (editButton) {
-      editButton.addEventListener("click", editUser);
-    }
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const userId = e.currentTarget.dataset.id;
+        editUser(userId);
+      });
+    });
 
-
-    const uDelete = document.getElementById("uDelete");
-    if (uDelete) {
-      uDelete.addEventListener("click", deleteUser);
-    }
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        const userId = e.currentTarget.dataset.id;
+        await deleteUser(userId);
+      });
+    });
 
   } catch (err) {
     console.error("Error loading students:", err);
@@ -119,7 +125,13 @@ totalStudents.addEventListener('click', addStudents)
 
 
 
-const editUser = () => {
+const editUser = async (userId) => {
+
+  const userRef = doc(db, "usersInfo", userId);
+  const userSnap = await getDoc(userRef);
+  const user = userSnap.data();
+
+
   mainContainer.innerHTML = `
   <div class="container py-5">
     <div class="row justify-content-center">
@@ -180,25 +192,27 @@ const editUser = () => {
     </div>
   </div>`;
 
+  document.getElementById("userFormDiv").insertAdjacentHTML('afterbegin', `
+    <input type="hidden" id="emailInput" value="${user.email || ''}">
+  `);
+
   document.getElementById("saveUserBtn").addEventListener("click", async (e) => {
     e.preventDefault();
 
-    const emailInput = document.getElementById("emailInput").value.trim();
     const fullName = document.getElementById("fullName").value.trim();
     const dateOfBirth = document.getElementById("dob").value.trim();
-    const genderRadio = document.querySelector('input[name="gender"]:checked');
-    const gender = genderRadio ? genderRadio.value : "";
+    const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
     const CNIC = document.getElementById("cnic").value.trim();
     const phone = document.getElementById("phone").value.trim();
     const address = document.getElementById("address").value.trim();
+    const email = document.getElementById("emailInput").value.trim();
 
-    if (!emailInput || !fullName || !dateOfBirth || !gender || !CNIC || !phone) {
+    if (!fullName || !dateOfBirth || !gender || !CNIC || !phone) {
       swal("Validation Error", "Please fill in all required fields.", "warning");
       return;
     }
 
     try {
-      const userRef = doc(db, "usersInfo", "user_1");
       await setDoc(userRef, {
         fullName,
         dateOfBirth,
@@ -206,13 +220,13 @@ const editUser = () => {
         CNIC,
         phone,
         address,
-        email: emailInput,
-        verify: user.emailVerified,
+        email,
+        verify: user.verify || false,
       });
 
       Swal.fire("Success!", "User data saved successfully.", "success").then(() => {
         clearForm();
-        window.location.replace("/admin.html");
+        addStudents();
       });
     } catch (error) {
       console.error("Error saving user:", error);
@@ -233,18 +247,23 @@ function clearForm() {
 }
 
 
-let deleteUser = async () => {
+const deleteUser = async (userId) => {
+  try {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will permanently delete the user.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    });
 
-  const q = query(collection(db, "usersInfo"));
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach(async (document) => {
-    // console.log(doc.data());
-    // console.log(doc.id);
-    
-    await deleteDoc(doc(db, "usersInfo", document.id));
-  });
-
-  window.location.replace("/admin.html")
- 
-} 
+    if (confirm.isConfirmed) {
+      await deleteDoc(doc(db, "usersInfo", userId));
+      Swal.fire("Deleted!", "User has been deleted.", "success");
+      addStudents();  // Refresh UI
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    Swal.fire("Error", "Failed to delete user.", "error");
+  }
+};
