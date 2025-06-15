@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduVision - Student Portal Admin</title>
+  <link rel="shortcut icon" href="Images/Favicon.png" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Moment.js v2.30.1 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+  <!-- swal Aleart -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="CSS/admin.css">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button class="btn btn-sm btn-outline-secondary d-md-none">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-brand">
+      <i class="fas fa-graduation-cap"></i>
+      <span>Admin Panel</span>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="admin.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li><a href="#" id="totalStudents"><i class="fas fa-users"></i>Total Students</a></li>
+      <li><a href="#" id="showAssignment"><i class="fas fa-file-alt"></i> Assignments</a></li>
+      <li><a href="#" id="enterCourses"><i class="fas fa-calendar-check"></i>Enter Courses</a></li>
+      <li><a href="#" id="courses"><i class="fas fa-calendar-check"></i>Enroll Courses</a></li>
+      <li><a href="#" id="attendance"><i class="fas fa-user-check"></i>Attendance</a></li>
+    </ul>
+  </div>
+
+
+  <!-- Main Content -->
+  <div class="main-content assignment-container" id="main-container">
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+      <button class="btn btn-sm btn-outline-secondary d-md-none">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" class="form-control form-control-sm" placeholder="Search...">
+      </div>
+      <div class="user-menu">
+        <div class="position-relative me-3">
+          <i class="fas fa-bell text-muted fs-5"></i>
+          <span class="notification-badge">3</span>
+        </div>
+        <img src="https://media.licdn.com/dms/image/v2/D4D03AQGeg8Na_UcHJw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1727801540957?e=1754524800&v=beta&t=3WUcTLjb32ew6nLIUMl3cfqOjtRJYZthgkpl5Z7Rfv8" alt="User">
+        <div>
+          <div class="fw-bold">Admin User</div>
+          <small class="text-muted">Administrator</small>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Dashboard Overview -->
+    <h4 class="mb-4">Dashboard Overview</h4>
+    <div class="row g-4 mb-4">
+
+      <div class="col-md-6 col-lg-3 fade-in delay-1">
+        <div class="stat-card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h6 class="stat-title">Total Students</h6>
+                <h3 class="stat-value" id="totalStudent">0</h3>
+              </div>
+              <div class="stat-icon" style="background-color: var(--primary);">
+                <i class="fas fa-user-graduate"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3 fade-in delay-2">
+        <div class="stat-card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h6 class="stat-title">Active Courses</h6>
+                <h3 class="stat-value" id="activeCourses">0</h3>
+              </div>
+              <div class="stat-icon" style="background-color: var(--success);">
+                <i class="fas fa-book-open"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3 fade-in delay-3">
+        <div class="stat-card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h6 class="stat-title">Total Assignments</h6>
+                <h3 class="stat-value" id="totalAssignment">0</h3>
+              </div>
+              <div class="stat-icon" style="background-color: var(--warning);">
+                <i class="fas fa-tasks"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 fade-in delay-4">
+        <div class="stat-card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h6 class="stat-title">Attendance Rate</h6>
+                <h3 class="stat-value">0%</h3>
+              </div>
+              <div class="stat-icon" style="background-color: var(--info);">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Submissions -->
+    <div class="row mb-4">
+      <div class="col-md-8 fade-in">
+        <div class="data-table card">
+          <div class="card-header bg-white border-0">
+            <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Recent Submissions</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Assignment</th>
+                    <th>Submitted</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="getAssignment">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+
+    document.querySelectorAll('.btn-outline-secondary').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelector('.sidebar').classList.toggle('active');
+      });
+    });
+
+    // Only run if toggle button exists
+    document.addEventListener('click', function (event) {
+      const sidebar = document.querySelector('.sidebar');
+      const toggleBtns = document.querySelectorAll('.btn-outline-secondary');
+      let clickedInsideToggle = false;
+
+      toggleBtns.forEach(btn => {
+        if (btn.contains(event.target)) {
+          clickedInsideToggle = true;
+        }
+      });
+
+      if (!sidebar.contains(event.target) && !clickedInsideToggle) {
+        sidebar.classList.remove('active');
+      }
+    });
+
+
+
+    // Add animation class to elements when they come into view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
+  <script src="JavaScript/admin.js" type="module"></script>
+  <script src="JavaScript/adminAssignment.js" type="module"></script>
+  <script src="JavaScript/totalStudents.js" type="module"></script>
+  <script src="/JavaScript/studentCourses.js" type="module"></script>
+  <script src="/JavaScript/enterCourses.js" type="module"></script>
+  <script src="/JavaScript/attendance.js" type="module"></script>
+</body>
+
+</html>

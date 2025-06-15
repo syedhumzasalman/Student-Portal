@@ -2,211 +2,152 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduVision - Student Portal Admin</title>
-  <link rel="shortcut icon" href="Images/Favicon.png" type="image/x-icon">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Moment.js v2.30.1 CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-  <!-- swal Aleart -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="CSS/admin.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Sign In</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../Images/Favicon.png" type="image/x-icon">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Minimal custom CSS -->
+    <style>
+        .form-container {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .terms-check {
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <button class="btn btn-sm btn-outline-secondary d-md-none">
-      <i class="fas fa-bars"></i>
-    </button>
-    <div class="sidebar-brand">
-      <i class="fas fa-graduation-cap"></i>
-      <span>Admin Panel</span>
-    </div>
-    <ul class="sidebar-nav">
-      <li><a href="admin.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-      <li><a href="#" id="totalStudents"><i class="fas fa-users"></i>Total Students</a></li>
-      <li><a href="#" id="showAssignment"><i class="fas fa-file-alt"></i> Assignments</a></li>
-      <li><a href="#" id="enterCourses"><i class="fas fa-calendar-check"></i>Enter Courses</a></li>
-      <li><a href="#" id="courses"><i class="fas fa-calendar-check"></i>Enroll Courses</a></li>
-      <li><a href="#" id="attendance"><i class="fas fa-user-check"></i>Attendance</a></li>
-    </ul>
-  </div>
 
 
-  <!-- Main Content -->
-  <div class="main-content assignment-container" id="main-container">
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-      <button class="btn btn-sm btn-outline-secondary d-md-none">
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" class="form-control form-control-sm" placeholder="Search...">
-      </div>
-      <div class="user-menu">
-        <div class="position-relative me-3">
-          <i class="fas fa-bell text-muted fs-5"></i>
-          <span class="notification-badge">3</span>
-        </div>
-        <img src="https://media.licdn.com/dms/image/v2/D4D03AQGeg8Na_UcHJw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1727801540957?e=1754524800&v=beta&t=3WUcTLjb32ew6nLIUMl3cfqOjtRJYZthgkpl5Z7Rfv8" alt="User">
-        <div>
-          <div class="fw-bold">Admin User</div>
-          <small class="text-muted">Administrator</small>
-        </div>
-      </div>
-    </nav>
+    <div class="container-fluid min-vh-100 d-flex align-items-center">
+        <div class="container">
+            <div class="row g-0 form-container overflow-hidden">
 
-    <!-- Dashboard Overview -->
-    <h4 class="mb-4">Dashboard Overview</h4>
-    <div class="row g-4 mb-4">
+                <!-- Image Column - Hidden on mobile -->
+                <div class="col-lg-6 d-none d-lg-flex text-white p-0 align-items-stretch">
+                    <img src="../Images/SignInImage.gif" alt="Sign In Image"
+                        class="img-fluid w-100 h-100 object-fit-cover">
+                </div>
 
-      <div class="col-md-6 col-lg-3 fade-in delay-1">
-        <div class="stat-card h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between">
-              <div>
-                <h6 class="stat-title">Total Students</h6>
-                <h3 class="stat-value" id="totalStudent">0</h3>
-              </div>
-              <div class="stat-icon" style="background-color: var(--primary);">
-                <i class="fas fa-user-graduate"></i>
-              </div>
+
+                <!-- Form Column -->
+                <div class="col-lg-6 p-5">
+                    <div class="text-center mb-4 d-lg-none">
+                        <img src="../Images/Favicon.png" alt="image icon" style="height: 70px;">
+                        <h3 class="fw-bold text-primary">Student Portal</h3>
+                    </div>
+                    <h1 class="h1 mb-4 fw-bolder">Admin Sign In</h1>
+
+
+
+                    <!-- Enter your Email -->
+                    <div class="mb-3">
+                        <label for="signinEmail" class="form-label">Admin Email</label>
+                        <input type="email" class="form-control" id="signinEmail" placeholder="admin@gmail.com">
+                    </div>
+
+                    <!-- Enter your Password -->
+                    <div class="mb-3 position-relative">
+                        <label for="signinPassword" class="form-label">Admin Password</label>
+                        <input type="password" class="form-control" id="signinPassword" placeholder="Enter a password">
+
+                        <!-- Lock Icon -->
+                        <span class="passwordShow position-absolute" id="changeIcon"
+                            style="top: 50%; right: 10px; transform: translateY(25%); cursor: pointer;">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                        </span>
+                    </div>
+
+                    <!-- Sign In Buton -->
+                    <button type="submit" class="btn btn-primary w-50 py-2 mb-3 fw-bold" id="login">Sign
+                        In</button>
+
+                </div>
+
+
             </div>
-          </div>
         </div>
-      </div>
-
-      <div class="col-md-6 col-lg-3 fade-in delay-2">
-        <div class="stat-card h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between">
-              <div>
-                <h6 class="stat-title">Active Courses</h6>
-                <h3 class="stat-value" id="activeCourses">0</h3>
-              </div>
-              <div class="stat-icon" style="background-color: var(--success);">
-                <i class="fas fa-book-open"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-lg-3 fade-in delay-3">
-        <div class="stat-card h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between">
-              <div>
-                <h6 class="stat-title">Total Assignments</h6>
-                <h3 class="stat-value" id="totalAssignment">0</h3>
-              </div>
-              <div class="stat-icon" style="background-color: var(--warning);">
-                <i class="fas fa-tasks"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3 fade-in delay-4">
-        <div class="stat-card h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between">
-              <div>
-                <h6 class="stat-title">Attendance Rate</h6>
-                <h3 class="stat-value">0%</h3>
-              </div>
-              <div class="stat-icon" style="background-color: var(--info);">
-                <i class="fas fa-calendar-check"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Recent Submissions -->
-    <div class="row mb-4">
-      <div class="col-md-8 fade-in">
-        <div class="data-table card">
-          <div class="card-header bg-white border-0">
-            <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Recent Submissions</h5>
-          </div>
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table table-hover mb-0">
-                <thead>
-                  <tr>
-                    <th>Student</th>
-                    <th>Assignment</th>
-                    <th>Submitted</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="getAssignment">
+    <!-- ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Sweet Aleart -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- External CSS -->
 
-    </div>
-  </div>
+    <script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+        let showPassword = () => {
+            let changeIcon = document.getElementById("changeIcon");
+            let signinPassword = document.getElementById("signinPassword");
 
-    document.querySelectorAll('.btn-outline-secondary').forEach(btn => {
-      btn.addEventListener('click', function () {
-        document.querySelector('.sidebar').classList.toggle('active');
-      });
-    });
+            // console.log(signinPassword);
 
-    // Only run if toggle button exists
-    document.addEventListener('click', function (event) {
-      const sidebar = document.querySelector('.sidebar');
-      const toggleBtns = document.querySelectorAll('.btn-outline-secondary');
-      let clickedInsideToggle = false;
-
-      toggleBtns.forEach(btn => {
-        if (btn.contains(event.target)) {
-          clickedInsideToggle = true;
+            if (signinPassword.type === "password") {
+                signinPassword.type = "text";
+                changeIcon.innerHTML = `<ion-icon name="lock-open-outline"></ion-icon>`;
+            } else {
+                signinPassword.type = "password";
+                changeIcon.innerHTML = `<ion-icon name="lock-closed"></ion-icon>`;
+            }
         }
-      });
 
-      if (!sidebar.contains(event.target) && !clickedInsideToggle) {
-        sidebar.classList.remove('active');
-      }
-    });
+        let passwordShow = document.querySelector(".passwordShow");
+        passwordShow.addEventListener('click', showPassword)
 
 
+        let SignIn = () => {
+            let signinEmail = document.getElementById("signinEmail");
+            let signinPassword = document.getElementById("signinPassword");
 
-    // Add animation class to elements when they come into view
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('fade-in');
+            let loginEmail = signinEmail.value.trim();
+            let loginPassword = signinPassword.value.trim();
+
+            // Check if empty
+            if (!loginEmail || !loginPassword) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Oops...",
+                    text: "All fields are required!",
+                });
+                return;
+            }
+            //  check if Email include @gamil.com or not
+            if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(loginEmail)) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Invalid Email",
+                    text: "Please enter a valid Gmail address!",
+                });
+                return;
+            }
+
+            if (signinEmail.value == "admin@gmail.com" && signinPassword.value == "hellohumzapleasein") {
+                window.location.href = "./adminLogin.html";
+                // console.log("mil gye");
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Invalid email or password!",
+                });
+            }
         }
-      });
-    }, { threshold: 0.1 });
 
-    document.querySelectorAll('.fade-in').forEach(el => {
-      observer.observe(el);
-    });
-  </script>
+        document.getElementById("login").addEventListener("click", SignIn);
+    </script>
 
-  <script src="JavaScript/admin.js" type="module"></script>
-  <script src="JavaScript/adminAssignment.js" type="module"></script>
-  <script src="JavaScript/totalStudents.js" type="module"></script>
-  <script src="/JavaScript/studentCourses.js" type="module"></script>
-  <script src="/JavaScript/enterCourses.js" type="module"></script>
-  <script src="/JavaScript/attendance.js" type="module"></script>
+
 </body>
 
 </html>
