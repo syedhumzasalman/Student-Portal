@@ -5,28 +5,30 @@ import { auth, onAuthStateChanged, doc, getDocs, collection, db } from "../fireB
 let activeCourses = document.getElementById("activeCourses");
 let totalStudent = document.getElementById("totalStudent");
 let totalAssignment = document.getElementById("totalAssignment");
-let countAssignment = null
-
 
 // Total students count function
 let countTotalStudents = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "usersInfo"));
+
+    let totalEnrolledCourses = 0;
+
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      countAssignment = data.enrolledCourses.length
-      
+      if (data.enrolledCourses && Array.isArray(data.enrolledCourses)) {
+        totalEnrolledCourses += data.enrolledCourses.length;
+      }
     });
-    
+
     const total = querySnapshot.size;
     totalStudent.textContent = `${total}`;
-    totalAssignment.textContent = `${countAssignment}`;
+    totalAssignment.textContent = `${totalEnrolledCourses}`;
   } catch (err) {
     console.error("Error getting students count:", err);
     totalStudent.textContent = "Err";
+    totalAssignment.textContent = "Err";
   }
 };
-
 
 // Total courses count function
 let getCoursesCount = async () => {
@@ -35,15 +37,15 @@ let getCoursesCount = async () => {
     const total = querySnapshot.size;
     activeCourses.textContent = `${total}`;
   } catch (err) {
-    console.error("Error getting students count:", err);
+    console.error("Error getting courses count:", err);
     activeCourses.textContent = "Err";
   }
 };
 
+// Call functions
+getCoursesCount();
+countTotalStudents();
 
-
-getCoursesCount()
-countTotalStudents()
 
 
 let getAssignment = document.getElementById("getAssignment");
